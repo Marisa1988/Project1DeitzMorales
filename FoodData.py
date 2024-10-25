@@ -146,9 +146,10 @@ plt.xlabel('Number of Products')
 plt.ylabel('Category')
 plt.title('Top 25 Major Categories in Open Food Facts')
 plt.gca().invert_yaxis()  # Invert y-axis to have the category with the most products on top
-plt.show()
+# plt.show()
 plt.savefig('plot1.png', dpi=300) 
 plt.show()
+plt.close()
 
 # In[11]:
 
