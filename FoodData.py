@@ -146,7 +146,9 @@ plt.xlabel('Number of Products')
 plt.ylabel('Category')
 plt.title('Top 25 Major Categories in Open Food Facts')
 plt.gca().invert_yaxis()  # Invert y-axis to have the category with the most products on top
+plt.savefig('cat-data.png')  # Save as PNG
 plt.show()
+plt.close()
 
 
 # In[11]:
@@ -458,6 +460,8 @@ def plot_nova_distribution(category):
     plt.ylabel('Number of Products')
     plt.title(f'NOVA Group Distribution of {category.replace("-", " ").title()}')
     plt.show()
+    plt.savefig('NOVA Group.png', dpi=300)  # Higher quality for print
+
 
 # List of specific categories to choose from
 categories = [
