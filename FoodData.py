@@ -500,7 +500,67 @@ while True:
         print(f"Error: {e}. Please enter a valid number or type 'Done' to finish.")
 
 
-# In[ ]:
+# Get plant-based brands and ingredients; make a table; save to csv
+
+import requests
+import pandas as pd
+
+def get_plant_based_brands_and_ingredients():
+    url = "https://world.openfoodfacts.org/cgi/search.pl"
+    
+    # Define parameters to filter products from the United States
+    params = {
+        'action': 'process',
+        'tagtype_0': 'countries',         # Filter by country
+        'tag_contains_0': 'united-states',
+        'page_size': 100,                 # Adjust as needed for sample size
+        'json': True                      # Request data in JSON format
+    }
+    
+    response = requests.get(url, params=params)
+    
+    # Check if the request was successful
+    if response.status_code == 200:
+        data = response.json()
+        
+        # Extract product data if available
+        if 'products' in data:
+            plant_based_data = []
+            keywords = ['plant-based', 'vegan', 'dairy-free', 'meatless']
+            
+            for product in data['products']:
+                brand = product.get('brands', 'Unknown Brand')
+                name = product.get('product_name', 'Unnamed Product')
+                labels = product.get('labels', '')
+                description = product.get('generic_name', '')
+                ingredients = product.get('ingredients_text', 'Ingredients not listed')
+                
+                # Check for plant-based keywords in labels or description
+                if any(keyword in labels.lower() for keyword in keywords) or \
+                   any(keyword in description.lower() for keyword in keywords):
+                    plant_based_data.append({
+                        'Brand': brand,
+                        'Product Name': name,
+                        'Ingredients': ingredients
+                    })
+            
+            # Create a DataFrame and save it to a CSV file
+            df = pd.DataFrame(plant_based_data)
+            df.to_csv('plant_based_brands_with_ingredients_us.csv', index=False)
+            print("Data saved to 'plant_based_brands_with_ingredients_us.csv'")
+            
+            return df
+        else:
+            print("No products found.")
+            return pd.DataFrame()
+    else:
+        print(f"Error: {response.status_code}")
+        return pd.DataFrame()
+
+# Example usage
+df = get_plant_based_brands_and_ingredients()
+print(df)
+
 
 
 
